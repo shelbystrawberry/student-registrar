@@ -1,1 +1,40 @@
+#
+# Benjamin Nicholson / Shelby Sanchez-Herrera
+# 12/05/2021
+# Main module for group 4 project
+#
 
+import student
+import billing
+
+
+def login(id, s_list):
+    if id == '0':
+        return False
+    log_in_pin = input('Enter PIN: ')
+    log_in = (id, log_in_pin)
+    if log_in in s_list:
+        print('ID and PIN verified')
+        return True
+
+
+def main():
+    student_list = [('1001', '111'), ('1002', '222'),
+                    ('1003', '333'), ('1004', '444')]
+
+    student_in_state = {'1001': True,
+                        '1002': False,
+                        '1003': True,
+                        '1004': False}
+
+    course_hours = {'CSC101': 3, 'CSC102': 4, 'CSC103': 5, 'CSC104': 3}
+    course_roster = {'CSC101': ['1004', '1003'],
+                     'CSC102': ['1001'],
+                     'CSC103': ['1002'],
+                     'CSC104': []}
+    course_max_size = {'CSC101': 3, 'CSC102': 2, 'CSC103': 1, 'CSC104': 3}
+
+    ...
+
+
+main()
