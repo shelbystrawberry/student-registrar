@@ -9,10 +9,18 @@ from billing import calculate_hours_and_bill, display_hours_and_bill
 
 
 def login(id, s_list):
+
+    # Check for exit condition
     if id == '0':
         exit(0)
+
+    # get user pin and create tuple to compare
+    # *** POSSIBLE EC OPPORTUNITY ***
+    # Consider proposal to encrypt user pin for security -Discuss in future
     log_in_pin = input('Enter PIN: ')
     log_in = (id, log_in_pin)
+
+    # Verify ID and PIN
     if log_in in s_list:
         print('ID and PIN verified')
         return True
@@ -22,6 +30,11 @@ def login(id, s_list):
 
 
 def main():
+
+    # Prerequisite data
+    # *** POSSIBLE EC OPPORTUNITY ***
+    # Consider moving all data to a info.dat file system
+    # and implement the pickle method for data management. -Discuss in future
     student_list = [('1001', '111'), ('1002', '222'),
                     ('1003', '333'), ('1004', '444')]
 
@@ -40,10 +53,12 @@ def main():
     logged_in = False
     menu = ""
 
+    # Continue asking user to login or exit until success at either one.
     while not logged_in:
         id = input('Enter ID to log in, or 0 to quit: ')
         logged_in = login(id, student_list)
 
+    # Continue offering selection menu until verified user exits.
     while menu != '0':
         menu = input('Enter 1 to add course, 2 to drop course, '
                      '3 to list courses, 4 to show bill, 0 to exit: ')
