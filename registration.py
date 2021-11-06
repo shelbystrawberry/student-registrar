@@ -38,7 +38,7 @@ def main():
     course_max_size = {'CSC101': 3, 'CSC102': 2, 'CSC103': 1, 'CSC104': 3}
 
     logged_in = False
-    menu = ''
+    menu = ""
 
     while not logged_in:
         id = input('Enter ID to log in, or 0 to quit: ')
