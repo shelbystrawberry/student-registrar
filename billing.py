@@ -4,19 +4,33 @@
 # Billing module for group 4 project
 #
 
-IN_TUITION = 25.00
+IN_TUITION = 225.00
 OUT_TUITION = 850.00
 
 
 def calculate_hours_and_bill(id, s_in_state, c_rosters, c_hours):
     hours = 0
-    for k, v in c_rosters:
-        if id in v:
-            hours += c_hours[k]
-    if id in s_in_state:
-        cost = hours * IN_TUITION
-    else:
+    cost = 0
+    in_state = False
+    for key in c_rosters:
+        # v = c_hours[key]
+        if id in c_rosters[key]:
+            for k in c_hours:
+                if key == k:
+                    hours += c_hours[k]
+
+    for student in s_in_state:
+        if id == student:
+            # cost = hours * IN_TUITION
+            # skip = True
+            # break
+            in_state = s_in_state[student]
+
+    if not in_state:
         cost = hours * OUT_TUITION
+    else:
+        cost = hours * IN_TUITION
+
     return hours, cost
 
 
