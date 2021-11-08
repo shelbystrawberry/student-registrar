@@ -64,7 +64,7 @@ def main():
                      '3 to list courses, 4 to show bill, 0 to exit: ')
 
         if menu == '1':
-            ...
+            add_course(id, course_roster,course_max_size)
 
         elif menu == '2':
             ...
