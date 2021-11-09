@@ -58,29 +58,29 @@ def main():
         id = input('Enter ID to log in, or 0 to quit: ')
         logged_in = login(id, student_list)
 
-    # Continue offering selection menu until verified user exits.
-    while menu != '0':
-        menu = input('Enter 1 to add course, 2 to drop course, '
-                     '3 to list courses, 4 to show bill, 0 to exit: ')
+        # Continue offering selection menu until verified user exits.
+        while logged_in:
+            menu = input('Enter 1 to add course, 2 to drop course, '
+                         '3 to list courses, 4 to show bill, 0 to exit: ')
 
-        if menu == '1':
-            add_course(id, course_roster,course_max_size)
+            if menu == '1':
+                add_course(id, course_roster,course_max_size)
 
-        elif menu == '2':
-            drop_course(id, course_roster)
+            elif menu == '2':
+                drop_course(id, course_roster)
 
-        elif menu == '3':
-            list_courses(id, course_roster)
+            elif menu == '3':
+                list_courses(id, course_roster)
 
-        elif menu == '4':
-            hours, cost = calculate_hours_and_bill(id, student_in_state,course_roster, course_hours)
-            display_hours_and_bill(hours, cost)
+            elif menu == '4':
+                hours, cost = calculate_hours_and_bill(id, student_in_state,course_roster, course_hours)
+                display_hours_and_bill(hours, cost)
 
-        elif menu == '0':
-            exit(0)
+            elif menu == '0':
+                logged_in = False
 
-        else:
-            print('Invalid Choice')
+            else:
+                print('Invalid Choice')
 
 
 main()
