@@ -6,7 +6,7 @@
 
 
 def add_course(id, c_roster, c_max_size):
-    course_input = input('Enter the course you\'d like to add: ')
+    course_input = (input('Enter the course you\'d like to add: ')).upper()
     if course_input not in c_roster:
         print('Please enter a valid course.')
     else:
