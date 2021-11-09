@@ -29,6 +29,33 @@ def login(id, s_list):
         return False
 
 
+def access_data():
+    try:
+        file = open('data.dat', 'rb')
+        student_list = pickle.load(file)
+        student_in_state = pickle.load(file)
+        course_hours = pickle.load(file)
+        course_roster = pickle.load(file)
+        course_max_size = pickle.load(file)
+        file.close()
+        return student_list, student_in_state, course_hours, course_roster, course_max_size
+    except FileNotFoundError:
+        student_list = [('1001', '111'), ('1002', '222'),
+                    ('1003', '333'), ('1004', '444')]
+
+        student_in_state = {'1001': True,
+                            '1002': False,
+                            '1003': True,
+                            '1004': False}
+
+        course_hours = {'CSC101': 3, 'CSC102': 4, 'CSC103': 5, 'CSC104': 3}
+        course_roster = {'CSC101': ['1004', '1003'],
+                         'CSC102': ['1001'],
+                         'CSC103': ['1002'],
+                         'CSC104': []}
+        course_max_size = {'CSC101': 3, 'CSC102': 2, 'CSC103': 1, 'CSC104': 3}
+
+
 def write_data(student_list, student_in_state, course_hours, course_roster, course_max_size):
     file = open('data.dat', 'wb')
     pickle.dump(student_list, file)
@@ -41,52 +68,9 @@ def write_data(student_list, student_in_state, course_hours, course_roster, cour
 
 
 def main():
-    # Prerequisite data
-    # *** POSSIBLE EC OPPORTUNITY ***
-    # Consider moving all data to a info.dat file system
-    # and implement the pickle method for data management. -Discuss in future
-    # student_list = [('1001', '111'), ('1002', '222'),
-    #                 ('1003', '333'), ('1004', '444')]
-    # 
-    # student_in_state = {'1001': True,
-    #                     '1002': False,
-    #                     '1003': True,
-    #                     '1004': False}
-    # 
-    # course_hours = {'CSC101': 3, 'CSC102': 4, 'CSC103': 5, 'CSC104': 3}
-    # course_roster = {'CSC101': ['1004', '1003'],
-    #                  'CSC102': ['1001'],
-    #                  'CSC103': ['1002'],
-    #                  'CSC104': []}
-    # course_max_size = {'CSC101': 3, 'CSC102': 2, 'CSC103': 1, 'CSC104': 3}
-
     logged_in = False
     menu = ""
-    try:
-        file = open('data.dat', 'rb')
-        student_list = pickle.load(file)
-        student_in_state = pickle.load(file)
-        course_hours = pickle.load(file)
-        course_roster = pickle.load(file)
-        course_max_size = pickle.load(file)
-        file.close()
-    except FileNotFoundError:
-        student_list = [('1001', '111'), ('1002', '222'),
-                    ('1003', '333'), ('1004', '444')]
-
-        student_in_state = {'1001': True,
-                            '1002': False,
-                            '1003': True,
-                            '1004': False}
-        
-        course_hours = {'CSC101': 3, 'CSC102': 4, 'CSC103': 5, 'CSC104': 3}
-        course_roster = {'CSC101': ['1004', '1003'],
-                         'CSC102': ['1001'],
-                         'CSC103': ['1002'],
-                         'CSC104': []}
-        course_max_size = {'CSC101': 3, 'CSC102': 2, 'CSC103': 1, 'CSC104': 3}
-
-    # Continue asking user to login or exit until success at either one.
+    student_list, student_in_state, course_hours, course_roster, course_max_size = access_data()
     while not logged_in:
         id = input('Enter ID to log in, or 0 to quit: ')
         logged_in = login(id, student_list)
