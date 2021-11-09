@@ -67,14 +67,13 @@ def main():
             add_course(id, course_roster,course_max_size)
 
         elif menu == '2':
-            ...
+            drop_course(id, course_roster)
 
         elif menu == '3':
-            ...
+            list_courses(id, course_roster)
 
         elif menu == '4':
-            hours, cost = calculate_hours_and_bill(id, student_in_state,
-                                                   course_roster, course_hours)
+            hours, cost = calculate_hours_and_bill(id, student_in_state,course_roster, course_hours)
             display_hours_and_bill(hours, cost)
 
         elif menu == '0':
