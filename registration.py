@@ -6,6 +6,7 @@
 
 from student import add_course, drop_course, list_courses
 from billing import calculate_hours_and_bill, display_hours_and_bill
+import pickle
 
 
 def login(id, s_list):
@@ -61,13 +62,29 @@ def main():
 
     logged_in = False
     menu = ""
-    file = open('data.dat', 'rb')
-    student_list = pickle.load(file)
-    student_in_state = pickle.load(file)
-    course_hours = pickle.load(file)
-    course_roster = pickle.load(file)
-    course_max_size = pickle.load(file)
-    file.close()
+    try:
+        file = open('data.dat', 'rb')
+        student_list = pickle.load(file)
+        student_in_state = pickle.load(file)
+        course_hours = pickle.load(file)
+        course_roster = pickle.load(file)
+        course_max_size = pickle.load(file)
+        file.close()
+    except FileNotFoundError:
+        student_list = [('1001', '111'), ('1002', '222'),
+                    ('1003', '333'), ('1004', '444')]
+
+        student_in_state = {'1001': True,
+                            '1002': False,
+                            '1003': True,
+                            '1004': False}
+        
+        course_hours = {'CSC101': 3, 'CSC102': 4, 'CSC103': 5, 'CSC104': 3}
+        course_roster = {'CSC101': ['1004', '1003'],
+                         'CSC102': ['1001'],
+                         'CSC103': ['1002'],
+                         'CSC104': []}
+        course_max_size = {'CSC101': 3, 'CSC102': 2, 'CSC103': 1, 'CSC104': 3}
 
     # Continue asking user to login or exit until success at either one.
     while not logged_in:
