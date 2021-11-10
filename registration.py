@@ -5,7 +5,7 @@
 #
 
 from student import add_course, drop_course, list_courses
-from billing import calculate_hours_and_bill, display_hours_and_bill
+from billing import Billing
 import pickle
 
 
@@ -54,6 +54,7 @@ def access_data():
                          'CSC103': ['1002'],
                          'CSC104': []}
         course_max_size = {'CSC101': 3, 'CSC102': 2, 'CSC103': 1, 'CSC104': 3}
+        return student_list, student_in_state, course_hours, course_roster, course_max_size
 
 
 def write_data(student_list, student_in_state, course_hours, course_roster, course_max_size):
@@ -90,8 +91,9 @@ def main():
                 list_courses(id, course_roster)
 
             elif menu == '4':
-                hours, cost = calculate_hours_and_bill(id, student_in_state, course_roster, course_hours)
-                display_hours_and_bill(hours, cost)
+                bill = Billing(id, student_in_state, course_roster, course_hours)
+                bill.calculate_hours_and_bill()
+                bill.display_hours_and_bill()
 
             elif menu == '0':
                 write_data(student_list, student_in_state, course_hours, course_roster, course_max_size)
