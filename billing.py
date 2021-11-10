@@ -8,39 +8,48 @@ IN_TUITION = 225.00
 OUT_TUITION = 850.00
 
 
-def calculate_hours_and_bill(id, s_in_state, c_rosters, c_hours):
-    hours = 0
-    in_state = False
+class Billing:
+    def __init__(self, id, s_in_state, c_rosters, c_hours):
+        self.hours = 0
+        self.cost = 0
+        self.__id = id
+        self.__s_in_state = s_in_state
+        self.__c_rosters = c_rosters
+        self.__c_hours = c_hours
 
-    # Go through Roster dictionary and look for enrollment.
-    # If enrolled in course, find credit hours for course and
-    # add to total credit hours student is taking.
-    for key in c_rosters:
-        if id in c_rosters[key]:
-            for k in c_hours:
-                if key == k:
-                    hours += c_hours[k]
+    def calculate_hours_and_bill(self):
+        in_state = False
 
-    # Check if student is an instate student.
-    # Assigns True or False to variable 'in_state' depending on instate status.
-    for student in s_in_state:
-        if id == student:
-            in_state = s_in_state[student]
+        # Go through Roster dictionary and look for enrollment.
+        # If enrolled in course, find credit hours for course and
+        # add to total credit hours student is taking.
+        for key in self.__c_rosters:
+            if self.__id in self.__c_rosters[key]:
+                for k in self.__c_hours:
+                    if key == k:
+                        self.hours += self.__c_hours[k]
 
-    # Out of state tuition calculation
-    if not in_state:
-        cost = hours * OUT_TUITION
+        # Check if student is an instate student.
+        # Assigns True or False to variable 'in_state' depending on instate status.
+        for student in self.__s_in_state:
+            if self.__id == student:
+                in_state = self.__s_in_state[student]
 
-    # In state tuition calculation
-    else:
-        cost = hours * IN_TUITION
+        # Out of state tuition calculation
+        if not in_state:
+            self.cost = self.hours * OUT_TUITION
 
-    # returns values for total credit hours and total tuition cost in that order
-    return hours, cost
+        # In state tuition calculation
+        else:
+            self.cost = self.hours * IN_TUITION
 
-
-def display_hours_and_bill(hours, cost):
+        # returns values for total credit hours and total tuition cost in that order
+        # return self.hours, self.cost
 
     # Uses an f string to present student bill
-    print(f'Course load: {hours} credit hours\n'
-          f'Enrollment cost: ${cost:.2f}')
+    # def __str__(self):
+
+    def display_hours_and_bill(self):
+        print(f'Course load: {self.hours} credit hours\n'
+              f'Enrollment cost: ${self.cost:.2f}')
+
