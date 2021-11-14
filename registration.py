@@ -7,41 +7,41 @@
 from student import add_course, drop_course, list_courses
 from billing import Billing
 import pickle
+import salt
 
 
 def login(id, s_list):
-    # Check for exit condition
+    # # Check for exit condition
     if id == '0':
         exit(0)
-
-    # get user pin and create tuple to compare
-    # *** POSSIBLE EC OPPORTUNITY ***
-    # Consider proposal to encrypt user pin for security -Discuss in future
+    #
+    # # get user pin and create tuple to compare
     log_in_pin = input('Enter PIN: ')
-    log_in = (id, log_in_pin)
 
-    # Verify ID and PIN
-    if log_in in s_list:
+    login_valid = salt.check_user(id, log_in_pin)
+    if login_valid:
         print('ID and PIN verified')
-        return True
     else:
         print('ID or PIN incorrect')
-        return False
+
+    return login_valid
 
 
 def access_data():
     try:
         file = open('data.dat', 'rb')
-        student_list = pickle.load(file)
+        salted_student_list = pickle.load(file)
         student_in_state = pickle.load(file)
         course_hours = pickle.load(file)
         course_roster = pickle.load(file)
         course_max_size = pickle.load(file)
         file.close()
-        return student_list, student_in_state, course_hours, course_roster, course_max_size
+        salt.load_users(salted_student_list)
     except FileNotFoundError:
         student_list = [('1001', '111'), ('1002', '222'),
-                    ('1003', '333'), ('1004', '444')]
+                        ('1003', '333'), ('1004', '444')]
+
+        salted_student_list = salt.create_users(student_list)
 
         student_in_state = {'1001': True,
                             '1002': False,
@@ -54,12 +54,13 @@ def access_data():
                          'CSC103': ['1002'],
                          'CSC104': []}
         course_max_size = {'CSC101': 3, 'CSC102': 2, 'CSC103': 1, 'CSC104': 3}
-        return student_list, student_in_state, course_hours, course_roster, course_max_size
+
+    return salted_student_list, student_in_state, course_hours, course_roster, course_max_size
 
 
-def write_data(student_list, student_in_state, course_hours, course_roster, course_max_size):
+def write_data(salted_student_list, student_in_state, course_hours, course_roster, course_max_size):
     file = open('data.dat', 'wb')
-    pickle.dump(student_list, file)
+    pickle.dump(salted_student_list, file)
     pickle.dump(student_in_state, file)
     pickle.dump(course_hours, file)
     pickle.dump(course_roster, file)
@@ -71,10 +72,10 @@ def write_data(student_list, student_in_state, course_hours, course_roster, cour
 def main():
     logged_in = False
     menu = ""
-    student_list, student_in_state, course_hours, course_roster, course_max_size = access_data()
+    salted_student_list, student_in_state, course_hours, course_roster, course_max_size = access_data()
     while not logged_in:
         id = input('Enter ID to log in, or 0 to quit: ')
-        logged_in = login(id, student_list)
+        logged_in = login(id, salted_student_list)
 
         # Continue offering selection menu until verified user exits.
         while logged_in:
@@ -93,10 +94,10 @@ def main():
             elif menu == '4':
                 bill = Billing(id, student_in_state, course_roster, course_hours)
                 bill.calculate_hours_and_bill()
-                bill.display_hours_and_bill()
+                print(bill)
 
             elif menu == '0':
-                write_data(student_list, student_in_state, course_hours, course_roster, course_max_size)
+                write_data(salted_student_list, student_in_state, course_hours, course_roster, course_max_size)
                 logged_in = False
 
             else:
