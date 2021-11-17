@@ -25,7 +25,7 @@ class Student:
                     print(f'Course {course_input} was added.')
 
     def drop_course(self):
-        course_input = input('Enter the course you\'d like to drop: ')
+        course_input = input('Enter the course you\'d like to drop: ').upper()
         if course_input not in self.c_roster:
             print('Please enter a valid course.')
         else:
