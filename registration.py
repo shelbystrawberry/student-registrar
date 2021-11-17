@@ -4,7 +4,7 @@
 # Main module for group 4 project
 #
 
-from student import add_course, drop_course, list_courses
+from student import Student
 from billing import Billing
 import pickle
 import salt
@@ -76,20 +76,20 @@ def main():
     while not logged_in:
         id = input('Enter ID to log in, or 0 to quit: ')
         logged_in = login(id, salted_student_list)
-
         # Continue offering selection menu until verified user exits.
+        student = Student(id, course_roster, course_max_size)
         while logged_in:
             menu = input('Enter 1 to add course, 2 to drop course, '
                          '3 to list courses, 4 to show bill, 0 to exit: ')
 
             if menu == '1':
-                add_course(id, course_roster, course_max_size)
+                student.add_course()
 
             elif menu == '2':
-                drop_course(id, course_roster)
+                student.drop_course()
 
             elif menu == '3':
-                list_courses(id, course_roster)
+                student.list_courses()
 
             elif menu == '4':
                 bill = Billing(id, student_in_state, course_roster, course_hours)
