@@ -4,13 +4,13 @@
 # Read and write data to sqlite db
 #
 
-import sqlite3
-import salt
 import json
+import sqlite3
+
+import salt
 
 
 def create():
-
     con = sqlite3.connect('registrar.db')
     cur = con.cursor()
 

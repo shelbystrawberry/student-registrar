@@ -19,3 +19,7 @@ def drop_student():
 
 def delete_student():
     ...
+
+
+def list_students():
+    ...
