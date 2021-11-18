@@ -4,7 +4,7 @@
 # Main module for group 4 project
 #
 
-from student import Student
+from student import add_course, drop_course, list_courses
 from billing import Billing
 import pickle
 import salt
@@ -14,8 +14,8 @@ def login(id, s_list):
     # # Check for exit condition
     if id == '0':
         exit(0)
-    #
-    # # get user pin and create tuple to compare
+
+    # get user pin and create tuple to compare
     log_in_pin = input('Enter PIN: ')
 
     login_valid = salt.check_user(id, log_in_pin)
@@ -38,8 +38,11 @@ def access_data():
         file.close()
         salt.load_users(salted_student_list)
     except FileNotFoundError:
-        student_list = [('1001', '111'), ('1002', '222'),
-                        ('1003', '333'), ('1004', '444')]
+        student_list = [('1001', '111'),
+                        ('1002', '222'),
+                        ('1003', '333'),
+                        ('1004', '444'),
+                        ('admin', 'admin')]
 
         salted_student_list = salt.create_users(student_list)
 
@@ -48,7 +51,10 @@ def access_data():
                             '1003': True,
                             '1004': False}
 
-        course_hours = {'CSC101': 3, 'CSC102': 4, 'CSC103': 5, 'CSC104': 3}
+        course_hours = {'CSC101': 3,
+                        'CSC102': 4,
+                        'CSC103': 5,
+                        'CSC104': 3}
         course_roster = {'CSC101': ['1004', '1003'],
                          'CSC102': ['1001'],
                          'CSC103': ['1002'],
@@ -71,25 +77,28 @@ def write_data(salted_student_list, student_in_state, course_hours, course_roste
 
 def main():
     logged_in = False
-    menu = ""
+    admin = False
     salted_student_list, student_in_state, course_hours, course_roster, course_max_size = access_data()
-    while not logged_in:
+    while not logged_in and not admin:
         id = input('Enter ID to log in, or 0 to quit: ')
-        logged_in = login(id, salted_student_list)
+        if id == 'admin':
+            admin = login(id, salted_student_list)
+        else:
+            logged_in = login(id, salted_student_list)
+
         # Continue offering selection menu until verified user exits.
-        student = Student(id, course_roster, course_max_size)
         while logged_in:
             menu = input('Enter 1 to add course, 2 to drop course, '
                          '3 to list courses, 4 to show bill, 0 to exit: ')
 
             if menu == '1':
-                student.add_course()
+                add_course(id, course_roster, course_max_size)
 
             elif menu == '2':
-                student.drop_course()
+                drop_course(id, course_roster)
 
             elif menu == '3':
-                student.list_courses()
+                list_courses(id, course_roster)
 
             elif menu == '4':
                 bill = Billing(id, student_in_state, course_roster, course_hours)
@@ -102,6 +111,27 @@ def main():
 
             else:
                 print('Invalid Choice')
+
+            # Admin utilities
+        while admin:
+            menu = input('Enter 1 to create new course, 2 to delete existing course, '
+                         '3 to drop student from course, 4 to delete student, 0 to exit: ')
+
+            if menu == '1':
+                ...
+
+            elif menu == '2':
+                ...
+
+            elif menu == '3':
+                ...
+
+            elif menu == '4':
+                ...
+
+            elif menu == '0':
+                write_data(salted_student_list, student_in_state, course_hours, course_roster, course_max_size)
+                admin = False
 
 
 main()
