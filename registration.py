@@ -9,6 +9,7 @@ import pickle
 import salt
 from billing import Billing
 from student import Student
+from admin import *
 
 
 salted_student_list = []
@@ -170,20 +171,23 @@ def main():
                          '5 to list all students, 0 to exit: ')
 
             if menu == '1':
-                ...
+                create_course(course_hours, course_roster, course_max_size)
+                write_data()
 
             elif menu == '2':
-                ...
+                delete_course(course_hours, course_roster, course_max_size)
+                write_data()
 
             elif menu == '3':
-                ...
+                drop_student(course_roster)
+                write_data()
 
             elif menu == '4':
+                # delete_student(salted_student_list)
                 ...
 
             elif menu == '5':
-                for student in salted_student_list:
-                    print(student[0])
+                list_students(salted_student_list)
 
             elif menu == '0':
                 write_data()
