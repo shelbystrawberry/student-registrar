@@ -80,7 +80,7 @@ def main():
         student = Student(id, course_roster, course_max_size)
         while logged_in:
             menu = input('Enter 1 to add course, 2 to drop course, '
-                         '3 to list courses, 4 to show bill, 0 to exit: ')
+                         '3 to list courses, 4 to show bill, 5 to view available courses or 0 to exit: ')
 
             if menu == '1':
                 student.add_course()
@@ -95,6 +95,9 @@ def main():
                 bill = Billing(id, student_in_state, course_roster, course_hours)
                 bill.calculate_hours_and_bill()
                 print(bill)
+
+            elif menu == '5':
+                student.view_courses()
 
             elif menu == '0':
                 write_data(salted_student_list, student_in_state, course_hours, course_roster, course_max_size)

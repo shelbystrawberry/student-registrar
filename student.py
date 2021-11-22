@@ -50,3 +50,8 @@ class Student:
         for i in course_list:
             print(i)
         print(f'Total number: {course_count}')
+
+    def view_courses(self):
+        print('Course List and their Available Seats')
+        for key_r in self.c_roster:
+            print(f'{key_r}: {int(self.c_maxsize[key_r]) - len(self.c_roster[key_r])}')
