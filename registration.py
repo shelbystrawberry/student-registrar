@@ -4,18 +4,27 @@
 # Main module for group 4 project
 #
 
-from student import Student
-from billing import Billing
 import pickle
+
 import salt
+from billing import Billing
+from student import Student
+from admin import *
 
 
-def login(id, s_list):
-    # # Check for exit condition
+salted_student_list = []
+student_in_state = {}
+course_hours = {}
+course_roster = {}
+course_max_size = {}
+
+
+def login(id):
+    # Check for exit condition
     if id == '0':
         exit(0)
-    #
-    # # get user pin and create tuple to compare
+
+    # get user pin and create tuple to compare
     log_in_pin = input('Enter PIN: ')
 
     login_valid = salt.check_user(id, log_in_pin)
@@ -28,6 +37,7 @@ def login(id, s_list):
 
 
 def access_data():
+    global salted_student_list, student_in_state, course_hours, course_roster, course_max_size
     try:
         file = open('data.dat', 'rb')
         salted_student_list = pickle.load(file)
@@ -38,8 +48,12 @@ def access_data():
         file.close()
         salt.load_users(salted_student_list)
     except FileNotFoundError:
-        student_list = [('1001', '111'), ('1002', '222'),
-                        ('1003', '333'), ('1004', '444')]
+        student_list = [('admin', 'admin'),
+                        ('1001', '111'),
+                        ('1002', '222'),
+                        ('1003', '333'),
+                        ('1004', '444'),
+                        ]
 
         salted_student_list = salt.create_users(student_list)
 
@@ -48,17 +62,19 @@ def access_data():
                             '1003': True,
                             '1004': False}
 
-        course_hours = {'CSC101': 3, 'CSC102': 4, 'CSC103': 5, 'CSC104': 3}
+        course_hours = {'CSC101': 3,
+                        'CSC102': 4,
+                        'CSC103': 5,
+                        'CSC104': 3}
         course_roster = {'CSC101': ['1004', '1003'],
                          'CSC102': ['1001'],
                          'CSC103': ['1002'],
                          'CSC104': []}
         course_max_size = {'CSC101': 3, 'CSC102': 2, 'CSC103': 1, 'CSC104': 3}
 
-    return salted_student_list, student_in_state, course_hours, course_roster, course_max_size
 
-
-def write_data(salted_student_list, student_in_state, course_hours, course_roster, course_max_size):
+def write_data():
+    global salted_student_list, student_in_state, course_hours, course_roster, course_max_size
     file = open('data.dat', 'wb')
     pickle.dump(salted_student_list, file)
     pickle.dump(student_in_state, file)
@@ -69,26 +85,71 @@ def write_data(salted_student_list, student_in_state, course_hours, course_roste
     print('Data saved to data.dat')
 
 
+def add_new_student():
+    global salted_student_list, student_in_state, course_hours, course_roster, course_max_size
+    if len(salted_student_list) < 10:
+        p = '100'
+    elif len(salted_student_list) < 100:
+        p = '10'
+    elif len(salted_student_list) < 1000:
+        p = '1'
+    new_id = p + str(len(salted_student_list))
+    print(f'Your student ID will be {new_id}.')
+    match = False
+    new_pin = ''
+    while not match:
+        pin1 = input('Enter new PIN: ')
+        pin2 = input('Re-enter PIN: ')
+        if pin1 == pin2:
+            new_pin = pin1
+            match = True
+        else:
+            print("PIN's do not match.")
+    salted_student_list = salt.add_user(new_id, new_pin)
+    try:
+        in_state = input('Have you lived in North Carolina for the past 6 months? Y/N: ')
+        if in_state.upper() == 'Y':
+            student_in_state[new_id] = True
+        elif in_state.upper() == 'N':
+            student_in_state[new_id] = False
+        else:
+            raise ValueError
+    except ValueError:
+        print('Invalid entry')
+    write_data()
+
+
 def main():
+    global salted_student_list, student_in_state, course_hours, course_roster, course_max_size
     logged_in = False
-    menu = ""
-    salted_student_list, student_in_state, course_hours, course_roster, course_max_size = access_data()
-    while not logged_in:
-        id = input('Enter ID to log in, or 0 to quit: ')
-        logged_in = login(id, salted_student_list)
+    admin = False
+    access_data()
+    while not logged_in and not admin:
+
+        id = input('Enter ID to log in, C to create new account, or 0 to quit: ')
+        if id == 'admin':
+            admin = login(id)
+        elif id.upper() == 'C':
+            add_new_student()
+        else:
+            logged_in = login(id)
+
         # Continue offering selection menu until verified user exits.
-        student = Student(id, course_roster, course_max_size)
         while logged_in:
             menu = input('Enter 1 to add course, 2 to drop course, '
                          '3 to list courses, 4 to show bill, 5 to view available courses or 0 to exit: ')
 
+            student = Student(id, course_roster, course_max_size)
             if menu == '1':
+                # add_course(id, course_roster, course_max_size)
                 student.add_course()
 
             elif menu == '2':
+                # drop_course(id, course_roster)
                 student.drop_course()
 
             elif menu == '3':
+                # list_courses(id, course_roster)
                 student.list_courses()
 
             elif menu == '4':
@@ -100,11 +161,40 @@ def main():
                 student.view_courses()
 
             elif menu == '0':
-                write_data(salted_student_list, student_in_state, course_hours, course_roster, course_max_size)
+                write_data()
                 logged_in = False
 
             else:
                 print('Invalid Choice')
+
+            # Admin utilities
+        while admin:
+            menu = input('Enter 1 to create new course, 2 to delete existing course, '
+                         '3 to drop student from course, 4 to delete student, '
+                         '5 to list all students, 0 to exit: ')
+
+            if menu == '1':
+                create_course(course_hours, course_roster, course_max_size)
+                write_data()
+
+            elif menu == '2':
+                delete_course(course_hours, course_roster, course_max_size)
+                write_data()
+
+            elif menu == '3':
+                drop_student(course_roster)
+                write_data()
+
+            elif menu == '4':
+                # delete_student(salted_student_list)
+                ...
+
+            elif menu == '5':
+                list_students(salted_student_list)
+
+            elif menu == '0':
+                write_data()
+                admin = False
 
 
 main()

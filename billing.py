@@ -48,5 +48,5 @@ class Billing:
 
     # Uses an f string to present student bill
     def __str__(self):
-        return f'Course load: {self.hours} credit hours\n'\
-                   f'Enrollment cost: ${self.cost:.2f}'
+        return f'Course load: {self.hours} credit hours\n' \
+               f'Enrollment cost: ${self.cost:.2f}'

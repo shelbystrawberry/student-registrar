@@ -2,9 +2,8 @@ import hashlib
 import random
 import string
 
-
 initial_list = [('1001', '111'), ('1002', '222'),
-                    ('1003', '333'), ('1004', '444')]
+                ('1003', '333'), ('1004', '444')]
 
 salted_student_list = []
 
@@ -22,8 +21,9 @@ def load_users(user_tuples):
 
 def add_user(username, password):
     salt = make_salt(32)
-    hash_brown = hash_pass(password, salt)
-    store(username, salt, hash_brown)
+    hash_p = hash_pass(password, salt)
+    store(username, salt, hash_p)
+    return salted_student_list
 
 
 def make_salt(num):
