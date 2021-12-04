@@ -17,9 +17,11 @@ student_in_state = {}
 course_hours = {}
 course_roster = {}
 course_max_size = {}
+deactivated_users = []
 
 
 def login(id):
+    active_user = True
     # Check for exit condition
     if id == '0':
         exit(0)
@@ -28,16 +30,18 @@ def login(id):
     log_in_pin = input('Enter PIN: ')
 
     login_valid = salt.check_user(id, log_in_pin)
-    if login_valid:
+    if id in deactivated_users:
+        active_user = False
+    if login_valid and active_user:
         print('ID and PIN verified')
+        return login_valid
     else:
         print('ID or PIN incorrect')
 
-    return login_valid
 
 
 def access_data():
-    global salted_student_list, student_in_state, course_hours, course_roster, course_max_size
+    global salted_student_list, student_in_state, course_hours, course_roster, course_max_size, deactivated_users
     try:
         file = open('data.dat', 'rb')
         salted_student_list = pickle.load(file)
@@ -45,6 +49,7 @@ def access_data():
         course_hours = pickle.load(file)
         course_roster = pickle.load(file)
         course_max_size = pickle.load(file)
+        deactivated_users = pickle.load(file)
         file.close()
         salt.load_users(salted_student_list)
     except FileNotFoundError:
@@ -74,13 +79,14 @@ def access_data():
 
 
 def write_data():
-    global salted_student_list, student_in_state, course_hours, course_roster, course_max_size
+    global salted_student_list, student_in_state, course_hours, course_roster, course_max_size, deactivated_users
     file = open('data.dat', 'wb')
     pickle.dump(salted_student_list, file)
     pickle.dump(student_in_state, file)
     pickle.dump(course_hours, file)
     pickle.dump(course_roster, file)
     pickle.dump(course_max_size, file)
+    pickle.dump(deactivated_users, file)
     file.close()
     print('Data saved to data.dat')
 
@@ -120,10 +126,11 @@ def add_new_student():
 
 
 def main():
-    global salted_student_list, student_in_state, course_hours, course_roster, course_max_size
+    global salted_student_list, student_in_state, course_hours, course_roster, course_max_size, deactivated_users
     logged_in = False
     admin = False
     access_data()
+    print(deactivated_users)
     while not logged_in and not admin:
 
         id = input('Enter ID to log in, C to create new account, or 0 to quit: ')
@@ -186,8 +193,8 @@ def main():
                 write_data()
 
             elif menu == '4':
-                # delete_student(salted_student_list)
-                ...
+                deactivate_student(deactivated_users)
+                write_data()
 
             elif menu == '5':
                 list_students(salted_student_list)

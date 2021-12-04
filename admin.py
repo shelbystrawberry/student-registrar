@@ -59,18 +59,10 @@ def drop_student(course_roster):
         print('Returning to menu. No changes were made.')
 
 
-def delete_student(salted_student_list):
-    # stu = input('Enter Student ID to be deactivated: ')
-    # for entry in salted_student_list:
-    #     if stu in entry:
-    #         t_list = list(entry)
-    #         salted_student_list.remove(entry)
-    #         t_list[1] = ''
-    #         f_list = tuple[t_list]
-    #         salted_student_list.append(f_list)
-    #     else:
-    #         print(f'Student {stu} not found.')
-    ...
+def deactivate_student(deactivated_users):
+    stu = input('Enter Student ID to be deactivated: ')
+    deactivated_users.append(stu)
+    print(deactivated_users)
 
 
 def list_students(salted_student_list):
