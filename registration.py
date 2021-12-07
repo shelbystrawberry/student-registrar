@@ -130,7 +130,6 @@ def main():
     logged_in = False
     admin = False
     access_data()
-    print(deactivated_users)
     while not logged_in and not admin:
 
         id = input('Enter ID to log in, C to create new account, or 0 to quit: ')
