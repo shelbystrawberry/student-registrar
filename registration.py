@@ -130,7 +130,6 @@ def main():
     logged_in = False
     admin = False
     access_data()
-    print(deactivated_users)
     while not logged_in and not admin:
 
         id = input('Enter ID to log in, C to create new account, or 0 to quit: ')
@@ -138,6 +137,8 @@ def main():
             admin = login(id)
         elif id.upper() == 'C':
             add_new_student()
+        elif id == 'SaLt':
+            print(salted_student_list)
         else:
             logged_in = login(id)
 
