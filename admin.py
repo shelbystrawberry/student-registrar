@@ -7,8 +7,18 @@
 
 def create_course(course_hours, course_roster, course_max_size):
     course_name = input('Enter course name: ')
-    credit_hours = int(input('Enter credit hours for course: '))
-    seats = int(input('Enter number of available seats: '))
+    while True:
+        credit_hours = int(input('Enter credit hours for course: '))
+        if credit_hours < 1:
+            print('Credit hours must be more than 0!')
+        else:
+            break
+    while True:
+        seats = int(input('Enter number of available seats: '))
+        if seats < 1:
+            print('A class must have at least one seat!')
+        else:
+            break
 
     course_hours[course_name.upper()] = credit_hours
     course_roster[course_name.upper()] = []
