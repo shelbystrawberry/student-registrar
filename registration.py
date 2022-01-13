@@ -10,7 +10,7 @@ import salt
 from billing import Billing
 from student import Student
 from admin import *
-
+from getpass import getpass
 
 salted_student_list = []
 student_in_state = {}
@@ -27,7 +27,7 @@ def login(id):
         exit(0)
 
     # get user pin and create tuple to compare
-    log_in_pin = input('Enter PIN: ')
+    log_in_pin = getpass('Enter PIN: ')
 
     login_valid = salt.check_user(id, log_in_pin)
     if id in deactivated_users:
@@ -37,7 +37,6 @@ def login(id):
         return login_valid
     else:
         print('ID or PIN incorrect')
-
 
 
 def access_data():
