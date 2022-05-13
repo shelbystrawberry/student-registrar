@@ -1,7 +1,7 @@
 #
 # Benjamin Nicholson / Shelby Sanchez-Herrera
 # 12/05/2021
-# Billing module for group 4 project
+# Billing module
 #
 
 IN_TUITION = 225.00

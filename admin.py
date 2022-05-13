@@ -1,7 +1,7 @@
 #
 # Benjamin Nicholson / Shelby Sanchez-Herrera
 # 12/05/2021
-# Admin module for group 4 project
+# Admin module
 #
 
 
