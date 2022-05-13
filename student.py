@@ -1,7 +1,7 @@
 #
 # Benjamin Nicholson / Shelby Sanchez-Herrera
 # 12/05/2021
-# Student module for group 4 project
+# Student module
 #
 
 class Student:
